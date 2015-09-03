@@ -1,4 +1,4 @@
 %% encoding: UTF-8
-{application,ms_logger}.
+{application,ms_kv}.
 {packages,[]}.
-{modules,[ms_logger,ms_logger_app,ms_logger_sup]}.
+{modules,[ms_kv,ms_kv_app,ms_kv_sup]}.
