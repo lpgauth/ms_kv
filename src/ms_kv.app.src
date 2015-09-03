@@ -1,0 +1,13 @@
+{application, ms_kv, [
+    {description, "ms kv"},
+    {vsn, "0.1.0"},
+    {registered, []},
+    {applications, [
+        kernel,
+        stdlib,
+        lager,
+        eleveldb
+    ]},
+    {mod, {ms_logger_app, []}},
+    {env, []}
+]}.

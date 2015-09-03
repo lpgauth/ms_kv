@@ -1,0 +1,4 @@
+%% encoding: UTF-8
+{application,ms_logger}.
+{packages,[]}.
+{modules,[ms_logger,ms_logger_app,ms_logger_sup]}.
