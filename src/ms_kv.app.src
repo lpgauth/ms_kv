@@ -5,9 +5,9 @@
     {applications, [
         kernel,
         stdlib,
-        lager,
+        ms_base,
         eleveldb
     ]},
-    {mod, {ms_logger_app, []}},
+    {mod, {ms_kv_app, []}},
     {env, []}
 ]}.
