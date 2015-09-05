@@ -1,0 +1,7 @@
+language: erlang
+notifications:
+  email: false
+otp_release:
+  - 17.5
+script: "make all build-plt test"
+sudo: false

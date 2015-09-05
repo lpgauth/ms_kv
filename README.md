@@ -1,5 +1,7 @@
 # ms_kv
 
+[![Build Status](https://travis-ci.org/lpgauth/ms_kv.svg)](https://travis-ci.org/lpgauth/ms_kv)
+
 Erlang microservice example (key-value store)
 
 ### Requirements
