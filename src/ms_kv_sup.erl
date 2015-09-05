@@ -21,4 +21,6 @@ start_link() ->
 -spec init([]) -> {ok, {{one_for_one, 5, 10}, [supervisor:child_spec()]}}.
 
 init([]) ->
-    {ok, {{one_for_one, 5, 10}, []}}.
+    {ok, {{one_for_one, 5, 10}, [
+        ?CHILD(ms_kv_cache_lru_server)
+    ]}}.

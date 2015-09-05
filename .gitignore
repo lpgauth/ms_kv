@@ -1,5 +1,6 @@
 .eunit/
 .rebar/
+db/
 deps/
 doc/README.md
 ebin/

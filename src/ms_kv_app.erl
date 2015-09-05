@@ -28,9 +28,16 @@ stop() ->
 -spec start(application:start_type(), term()) -> {ok, pid()}.
 
 start(_StartType, _StartArgs) ->
+    DbPath = application:get_env(?APP, db_path, ?DEFAULT_DB_PATH),
+
+    ok = ms_kv_cache:start(),
+    ok = ms_kv_db:open(DbPath),
+
     ms_kv_sup:start_link().
 
 -spec stop(term()) -> ok.
 
 stop(_State) ->
+    ms_kv_db:close(ms_kv_db:ref()),
+    ms_kv_cache:stop(),
     ok.

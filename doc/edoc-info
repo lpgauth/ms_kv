@@ -1,4 +1,5 @@
 %% encoding: UTF-8
 {application,ms_kv}.
 {packages,[]}.
-{modules,[ms_kv,ms_kv_app,ms_kv_sup]}.
+{modules,[ms_kv,ms_kv_app,ms_kv_cache,ms_kv_cache_lru_server,ms_kv_db,
+          ms_kv_sup]}.
