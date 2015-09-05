@@ -5,3 +5,4 @@
 -define(DEFAULT_DB_PATH, "db").
 -define(ETS_CACHE, ms_kv_cache).
 -define(ETS_CACHE_LRU, ms_kv_cache_lru).
+-define(ENV(Key, Default), application:get_env(?APP, Key, Default)).

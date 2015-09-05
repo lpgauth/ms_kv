@@ -22,7 +22,7 @@ close(DbRef) ->
             ms_base_global:unregister(?GLOBAL_NAME),
             ok;
         {error, Reason} ->
-            lager:warning("kv_db delete error: ~p~n", [Reason]),
+            lager:warning("ms_kv_db close error: ~p~n", [Reason]),
             ok
     end.
 
@@ -33,7 +33,7 @@ delete(Key, DbRef) ->
         ok ->
             ok;
         {error, Reason} ->
-            lager:warning("kv_db delete error: ~p~n", [Reason]),
+            lager:warning("ms_kv_db delete error: ~p~n", [Reason]),
             ok
     end.
 
@@ -46,7 +46,7 @@ get(Key, DbRef) ->
         not_found ->
             not_found;
         {error, Reason} ->
-            lager:warning("kv_db get error: ~p~n", [Reason]),
+            lager:warning("ms_kv_db get error: ~p~n", [Reason]),
             not_found
     end.
 
@@ -68,7 +68,7 @@ put(Key, Value, DbRef) ->
         ok ->
             ok;
         {error, Reason} ->
-            lager:warning("kv_db put error: ~p~n", [Reason]),
+            lager:warning("ms_kv_db put error: ~p~n", [Reason]),
             ok
     end.
 

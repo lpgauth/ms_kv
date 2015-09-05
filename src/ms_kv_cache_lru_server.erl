@@ -33,8 +33,8 @@ start_link() ->
 -spec init([]) -> {ok, state()}.
 
 init([]) ->
-    MaxSize = env(cache_max_size, ?DEFAULT_CACHE_MAX_SIZE),
-    TrimDelay = env(cache_trim_delay, ?DEFAULT_CACHE_TRIM_DELAY),
+    MaxSize = ?ENV(cache_max_size, ?DEFAULT_CACHE_MAX_SIZE),
+    TrimDelay = ?ENV(cache_trim_delay, ?DEFAULT_CACHE_TRIM_DELAY),
 
     {ok, #state {
         max_size = MaxSize,
@@ -76,9 +76,6 @@ code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
 
 %% private
-env(Key, Default) ->
-    application:get_env(?APP, Key, Default).
-
 trim(MaxSize) ->
     case ms_kv_cache:size() > MaxSize of
         true ->
