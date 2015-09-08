@@ -2,7 +2,6 @@
 -include("ms_kv.hrl").
 
 -export([
-    delete/1,
     get/1,
     put/2,
     size/0,
@@ -11,18 +10,6 @@
 ]).
 
 %% public
--spec delete(binary()) -> ok.
-
-delete(Key) ->
-    try ets:lookup_element(?ETS_CACHE, Key, 3) of
-        LruKey ->
-            ets:delete(?ETS_CACHE, Key),
-            ets:delete(?ETS_CACHE_LRU, LruKey)
-    catch
-        error:badarg ->
-            ok
-    end.
-
 -spec get(binary()) -> {ok, term()} | not_found.
 
 get(Key) ->
@@ -38,8 +25,8 @@ get(Key) ->
 
 put(Key, Value) ->
     Key2 = {unix_time(), Key},
-    ets:insert(?ETS_CACHE, {Key, Value, Key2}),
-    ets:insert(?ETS_CACHE_LRU, {Key2, true}),
+    ets:insert_new(?ETS_CACHE, {Key, Value, Key2}),
+    ets:insert_new(?ETS_CACHE_LRU, {Key2, true}),
     ok.
 
 -spec size() -> pos_integer().

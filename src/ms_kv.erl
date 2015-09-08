@@ -2,18 +2,11 @@
 -include("ms_kv.hrl").
 
 -export([
-    delete/1,
     get/1,
     put/2
 ]).
 
 %% public
--spec delete(binary()) -> ok.
-delete(Key) ->
-    ms_kv_cache:delete(Key),
-    DbRef = ms_kv_db:ref(),
-    ms_kv_db:delete(Key, DbRef).
-
 -spec get(binary()) -> {ok, binary()} | not_found.
 
 get(Key) ->

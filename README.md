@@ -11,7 +11,8 @@ Erlang microservice example (key-value store)
 ## API
 
 ```
-ms_logger:log(Timstamp, Bin)
+ms_kv:get(Key)
+ms_kv:put(Key, Value)
 ```
 
 ## Tests

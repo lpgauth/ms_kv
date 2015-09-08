@@ -3,7 +3,6 @@
 
 -export([
     close/1,
-    delete/2,
     get/2,
     open/1,
     put/3,
@@ -23,17 +22,6 @@ close(DbRef) ->
             ok;
         {error, Reason} ->
             lager:warning("ms_kv_db close error: ~p~n", [Reason]),
-            ok
-    end.
-
--spec delete(binary(), eleveldb:db_ref()) -> ok.
-
-delete(Key, DbRef) ->
-    case eleveldb:delete(DbRef, Key, []) of
-        ok ->
-            ok;
-        {error, Reason} ->
-            lager:warning("ms_kv_db delete error: ~p~n", [Reason]),
             ok
     end.
 
@@ -61,15 +49,20 @@ open(Path) ->
     ms_base_global:register(db_ref, DbRef),
     ok.
 
--spec put(binary(), binary(), eleveldb:db_ref()) -> ok.
+-spec put(binary(), binary(), eleveldb:db_ref()) -> ok | {error, key_exists}.
 
 put(Key, Value, DbRef) ->
-    case eleveldb:put(DbRef, Key, Value, [{sync, false}]) of
-        ok ->
-            ok;
-        {error, Reason} ->
-            lager:warning("ms_kv_db put error: ~p~n", [Reason]),
-            ok
+    case get(Key, DbRef) of
+        not_found ->
+            case eleveldb:put(DbRef, Key, Value, [{sync, false}]) of
+                ok ->
+                    ok;
+                {error, Reason} ->
+                    lager:warning("ms_kv_db put error: ~p~n", [Reason]),
+                    ok
+            end;
+        _Value ->
+            {error, key_exists}
     end.
 
 -spec ref() -> eleveldb:db_ref().

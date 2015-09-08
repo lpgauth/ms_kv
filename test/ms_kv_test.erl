@@ -26,11 +26,10 @@ kv() ->
     Key = random(),
     Value = random(),
     ok = ms_kv:put(Key, Value),
+    {error, key_exists} = ms_kv:put(Key, Value),
     {ok, Value} = ms_kv:get(Key),
     {ok, Value} = ms_kv:get(Key),
-    ok = ms_kv:delete(Key),
-    not_found = ms_kv:get(Key),
-    ok = ms_kv:delete(Key).
+    not_found = ms_kv:get(random()).
 
 kv_cache_lru_server() ->
     [fun () ->
