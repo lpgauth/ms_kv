@@ -15,6 +15,8 @@
 get(Key) ->
     try ets:lookup_element(?ETS_CACHE, Key, 2) of
         Value ->
+            Key2 = {unix_time(), Key},
+            ets:insert(?ETS_CACHE_LRU, {Key2, true}),
             {ok, Value}
     catch
         error:badarg ->
@@ -25,7 +27,7 @@ get(Key) ->
 
 put(Key, Value) ->
     Key2 = {unix_time(), Key},
-    ets:insert_new(?ETS_CACHE, {Key, Value, Key2}),
+    ets:insert_new(?ETS_CACHE, {Key, Value}),
     ets:insert_new(?ETS_CACHE_LRU, {Key2, true}),
     ok.
 
