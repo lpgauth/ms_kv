@@ -26,11 +26,11 @@ get(Key) ->
             end
     end.
 
--spec put(binary(), binary()) -> ok.
+-spec put(binary(), binary()) -> [ok].
 
 put(Key, Value) ->
     DbRef = ms_kv_db:ref(),
-    ms_kv_db:put(Key, Value, DbRef).
+    ms_base:apply_all(?MODULE, ms_kv_db, put, [Key, Value, DbRef]).
 
 %% private
 read_repair(Key) ->
