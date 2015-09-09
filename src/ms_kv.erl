@@ -22,10 +22,12 @@ get(Key) ->
         _ ->
             case ms_kv_db:get(Key) of
                 not_found ->
-                    ms_base_metric:increment(<<"ms_kv.get.not_found">>, 1, ?SAMPLE_RATE),
+                    ms_base_metric:increment(<<"ms_kv.get.not_found">>, 1,
+                        ?SAMPLE_RATE),
                     read_repair(Key);
                 {ok, Value} ->
-                    ms_base_metric:increment(<<"ms_kv.get.db">>, 1, ?SAMPLE_RATE),
+                    ms_base_metric:increment(<<"ms_kv.get.db">>, 1,
+                        ?SAMPLE_RATE),
                     ms_base:apply_hash(?APP, Key, ms_kv_cache, put,
                         [Key, Value]),
                     {ok, Value}
