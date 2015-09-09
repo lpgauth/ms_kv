@@ -17,14 +17,8 @@
 -spec close() -> ok.
 
 close() ->
-    case hanoidb:close(ref()) of
-        ok ->
-            ms_base_global:unregister(?GLOBAL_NAME),
-            ok;
-        {error, Reason} ->
-            lager:warning("ms_kv_db close error: ~p~n", [Reason]),
-            ok
-    end.
+    hanoidb:close(ref()),
+    ms_base_global:unregister(?GLOBAL_NAME).
 
 -spec get(binary()) -> {ok, term()} | not_found.
 
@@ -62,7 +56,7 @@ put(Key, Value) ->
             {error, key_exists}
     end.
 
--spec ref() -> eleveldb:db_ref().
+-spec ref() -> hanoidb:hanoidb().
 
 ref() ->
     ms_base_global:lookup(?GLOBAL_NAME).
