@@ -6,7 +6,7 @@
         kernel,
         stdlib,
         ms_base,
-        eleveldb
+        hanoidb
     ]},
     {mod, {ms_kv_app, []}},
     {env, []}

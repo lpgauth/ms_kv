@@ -8,8 +8,7 @@
     get/1,
     open/1,
     put/2,
-    ref/0,
-    size/0
+    ref/0
 ]).
 
 -define(GLOBAL_NAME, db_ref).
@@ -18,7 +17,7 @@
 -spec close() -> ok.
 
 close() ->
-    case eleveldb:close(ref()) of
+    case hanoidb:close(ref()) of
         ok ->
             ms_base_global:unregister(?GLOBAL_NAME),
             ok;
@@ -30,7 +29,7 @@ close() ->
 -spec get(binary()) -> {ok, term()} | not_found.
 
 get(Key) ->
-    case eleveldb:get(ref(), Key, [{fill_cache, false}]) of
+    case hanoidb:lookup(ref(), Key) of
         {ok, Value} ->
             {ok, Value};
         not_found ->
@@ -43,11 +42,7 @@ get(Key) ->
 -spec open(string()) -> ok.
 
 open(Path) ->
-    {ok, DbRef} = eleveldb:open(Path, [
-        {compression, true},
-        {create_if_missing, true},
-        {use_bloomfilter, true}
-    ]),
+    {ok, DbRef} = hanoidb:open(Path),
     ms_base_global:register(db_ref, DbRef),
     ok.
 
@@ -56,7 +51,7 @@ open(Path) ->
 put(Key, Value) ->
     case get(Key) of
         not_found ->
-            case eleveldb:put(ref(), Key, Value, [{sync, false}]) of
+            case hanoidb:put(ref(), Key, Value) of
                 ok ->
                     ok;
                 {error, Reason} ->
@@ -71,9 +66,3 @@ put(Key, Value) ->
 
 ref() ->
     ms_base_global:lookup(?GLOBAL_NAME).
-
--spec size() -> pos_integer().
-
-size() ->
-    {ok, Bytes} = eleveldb:status(ref(), <<"leveldb.total-bytes">>),
-    binary_to_integer(Bytes).
