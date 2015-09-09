@@ -44,15 +44,12 @@ kv_cache_lru_server() ->
 %% utils
 cleanup() ->
     ms_kv_app:stop(),
-    net_kernel:stop(),
     file:delete(?DB_PATH).
 
 random() ->
     crypto:rand_bytes(24).
 
 setup(KeyVals) ->
-    {ok, _} = net_kernel:start([ms_kv_test, shortnames]),
-    erlang:set_cookie(node(), secret),
     error_logger:tty(false),
     application:load(?APP),
     set_env(KeyVals),
