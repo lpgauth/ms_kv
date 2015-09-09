@@ -1,22 +1,24 @@
 -module(ms_kv_db).
 -include("ms_kv.hrl").
 
+-compile({no_auto_import, [get/1]}).
+
 -export([
-    close/1,
-    get/2,
+    close/0,
+    get/1,
     open/1,
-    put/3,
+    put/2,
     ref/0,
-    size/1
+    size/0
 ]).
 
 -define(GLOBAL_NAME, db_ref).
 
 %% public
--spec close(eleveldb:db_ref()) -> ok.
+-spec close() -> ok.
 
-close(DbRef) ->
-    case eleveldb:close(DbRef) of
+close() ->
+    case eleveldb:close(ref()) of
         ok ->
             ms_base_global:unregister(?GLOBAL_NAME),
             ok;
@@ -25,10 +27,10 @@ close(DbRef) ->
             ok
     end.
 
--spec get(binary(), eleveldb:db_ref()) -> {ok, term()} | not_found.
+-spec get(binary()) -> {ok, term()} | not_found.
 
-get(Key, DbRef) ->
-    case eleveldb:get(DbRef, Key, [{fill_cache, false}]) of
+get(Key) ->
+    case eleveldb:get(ref(), Key, [{fill_cache, false}]) of
         {ok, Value} ->
             {ok, Value};
         not_found ->
@@ -49,12 +51,12 @@ open(Path) ->
     ms_base_global:register(db_ref, DbRef),
     ok.
 
--spec put(binary(), binary(), eleveldb:db_ref()) -> ok | {error, key_exists}.
+-spec put(binary(), binary()) -> ok | {error, key_exists}.
 
-put(Key, Value, DbRef) ->
-    case get(Key, DbRef) of
+put(Key, Value) ->
+    case get(Key) of
         not_found ->
-            case eleveldb:put(DbRef, Key, Value, [{sync, false}]) of
+            case eleveldb:put(ref(), Key, Value, [{sync, false}]) of
                 ok ->
                     ok;
                 {error, Reason} ->
@@ -70,8 +72,8 @@ put(Key, Value, DbRef) ->
 ref() ->
     ms_base_global:lookup(?GLOBAL_NAME).
 
--spec size(eleveldb:db_ref()) -> pos_integer().
+-spec size() -> pos_integer().
 
-size(DbRef) ->
-    {ok, Bytes} = eleveldb:status(DbRef, <<"leveldb.total-bytes">>),
+size() ->
+    {ok, Bytes} = eleveldb:status(ref(), <<"leveldb.total-bytes">>),
     binary_to_integer(Bytes).

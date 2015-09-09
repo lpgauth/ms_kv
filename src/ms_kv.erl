@@ -12,16 +12,16 @@
 -spec get(binary()) -> {ok, binary()} | not_found.
 
 get(Key) ->
-    case ms_kv_cache:get(Key) of
+    case ms_base:apply_hash(?APP, Key, ms_kv_cache, get, [Key]) of
         {ok, Value} ->
             {ok, Value};
-        not_found ->
-            DbRef = ms_kv_db:ref(),
-            case ms_kv_db:get(Key, DbRef) of
+        _ ->
+            case ms_kv_db:get(Key) of
                 not_found ->
                     read_repair(Key);
                 {ok, Value} ->
-                    ms_kv_cache:put(Key, Value),
+                    ms_base:apply_hash(?APP, Key, ms_kv_cache, put,
+                        [Key, Value]),
                     {ok, Value}
             end
     end.
@@ -29,15 +29,22 @@ get(Key) ->
 -spec put(binary(), binary()) -> [ok].
 
 put(Key, Value) ->
-    DbRef = ms_kv_db:ref(),
-    ms_base:apply_all(?MODULE, ms_kv_db, put, [Key, Value, DbRef]).
+    ms_base:apply_all(?APP, ms_kv_db, put, [Key, Value]).
 
 %% private
+pick_value([]) ->
+    not_found;
+pick_value([not_found | T]) ->
+    pick_value(T);
+pick_value([Value | _T]) ->
+    Value.
+
 read_repair(Key) ->
-    case ms_base:apply_all_not_local(?MODULE, ms_kv, get, [Key]) of
-        [] ->
+    Values = ms_base:apply_all_not_local(?APP, ms_kv_db, get, [Key]),
+    case pick_value(Values) of
+        not_found ->
             not_found;
-        [Value | _] ->
+        Value ->
             put(Key, Value),
             Value
     end.

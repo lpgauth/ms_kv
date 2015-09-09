@@ -38,6 +38,6 @@ start(_StartType, _StartArgs) ->
 -spec stop(term()) -> ok.
 
 stop(_State) ->
-    ms_kv_db:close(ms_kv_db:ref()),
+    ms_kv_db:close(),
     ms_kv_cache:stop(),
     ok.

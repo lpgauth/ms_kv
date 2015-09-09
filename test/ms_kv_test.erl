@@ -25,8 +25,8 @@ ms_kv_test_() ->
 kv() ->
     Key = random(),
     Value = random(),
-    ok = ms_kv:put(Key, Value),
-    {error, key_exists} = ms_kv:put(Key, Value),
+    [ok] = ms_kv:put(Key, Value),
+    [{error, key_exists}] = ms_kv:put(Key, Value),
     {ok, Value} = ms_kv:get(Key),
     {ok, Value} = ms_kv:get(Key),
     not_found = ms_kv:get(random()).
@@ -44,17 +44,23 @@ kv_cache_lru_server() ->
 %% utils
 cleanup() ->
     ms_kv_app:stop(),
+    net_kernel:stop(),
     file:delete(?DB_PATH).
 
 random() ->
     crypto:rand_bytes(24).
 
 setup(KeyVals) ->
+    {ok, _} = net_kernel:start([ms_kv_test, shortnames]),
+    erlang:set_cookie(node(), secret),
     error_logger:tty(false),
     application:load(?APP),
     set_env(KeyVals),
     application:load(lager),
     application:set_env(lager, error_logger_redirect, false),
+    application:load(ms_base),
+    application:set_env(ms_base, local_resource_types, [ms_kv]),
+    application:set_env(ms_base, target_resource_types, [ms_kv]),
     ms_kv_app:start().
 
 set_env([]) ->

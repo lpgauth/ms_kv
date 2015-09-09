@@ -9,21 +9,12 @@
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#delete-1">delete/1</a></td><td></td></tr><tr><td valign="top"><a href="#get-1">get/1</a></td><td></td></tr><tr><td valign="top"><a href="#put-2">put/2</a></td><td></td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#get-1">get/1</a></td><td></td></tr><tr><td valign="top"><a href="#put-2">put/2</a></td><td></td></tr></table>
 
 
 <a name="functions"></a>
 
 ## Function Details ##
-
-<a name="delete-1"></a>
-
-### delete/1 ###
-
-<pre><code>
-delete(Key::binary()) -&gt; ok
-</code></pre>
-<br />
 
 <a name="get-1"></a>
 
@@ -39,7 +30,7 @@ get(Key::binary()) -&gt; {ok, binary()} | not_found
 ### put/2 ###
 
 <pre><code>
-put(Key::binary(), Value::binary()) -&gt; ok
+put(Key::binary(), Value::binary()) -&gt; [ok]
 </code></pre>
 <br />
 
