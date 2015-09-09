@@ -1,0 +1,9 @@
+.eunit/
+.rebar/
+db/
+db2/
+deps/
+doc/README.md
+ebin/
+log/
+
